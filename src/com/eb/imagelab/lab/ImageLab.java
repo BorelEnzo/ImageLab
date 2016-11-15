@@ -24,7 +24,7 @@ public abstract class ImageLab {
 	 * The alpha channel is not taken into account.
 	 * NB: if some pixels don't contain a color (in other words, if the channel R, G, or B is 0), and if this color is similar
 	 * to the <code>colour</code> passed as parameter, maybe it will not produce the expected result, because multiplying by 0 doesn't change
-	 * the channel's value. To work around this problem, you can use {@link #setMinBlue(MyImage)}, {@link #setMinGreen(MyImage)} or {@link #setMinRed(MyImage)}
+	 * the channel's value. To work around this problem, you can use {@link MyImage#setMinBlue()}, {@link MyImage#setMinGreen()} or {@link MyImage#setMinRed()}
 	 * @param myImage picture to deal with
 	 * @param colour of the filter
 	 */
@@ -37,7 +37,8 @@ public abstract class ImageLab {
 	 * Applies a linear colored gradient on a specific area
 	 * NB: if a picture doesn't contain a color (in other words, if the channel R, G, or B is 0), and if this color is similar
 	 * to the <code>colour</code> passed as parameter, maybe it will not produce the expected result, because multiplying by 0 doesn't change
-	 * the channel's value. To work around this problem, you can use {@link #setMinBlue(MyImage)}, {@link #setMinGreen(MyImage)} or {@link #setMinRed(MyImage)}
+	 * the channel's value. To work around this problem, you can use {@link MyImage#setMinBlue()}, {@link MyImage#setMinGreen()}
+	 * or {@link MyImage#setMinRed()}
 	 * @param myImage the picture to deal with
 	 * @param fromColour begins with this colour
 	 * @param toColour ends with this colour
@@ -65,7 +66,7 @@ public abstract class ImageLab {
 	 * Changes the transparency of the picture, if the image has an alpha channel.
 	 * To restore the default value, call this function with the multiplicative inverse of the previous value as delta
 	 * NB : if the value of the alpha channel is 0 from some pixels, and if you want more opacity, it will maybe not produce the expected result
-	 * on these pixels,because multiplyling by 0 doesn't change the value. To work around this problem, you can use {@link #setMinAlpha()}
+	 * on these pixels,because multiplyling by 0 doesn't change the value. To work around this problem, you can use {@link MyImage#setMinAlpha()}
 	 * @param myImage the picture to deal with
 	 * @param delta the variation of the transparency (delta = 1 means no changes)
 	 */
@@ -81,7 +82,7 @@ public abstract class ImageLab {
 	 * To restore the default value, call this function with the multiplicative inverse of the previous value as delta
 	 * NB: if some pixels don't a color (in other words, if the channel R, G, or B is 0), the multiplication by <code>delta</code>,
 	 * passed as parameter, will maybe not produce the expected result, because multiplying by 0 doesn't change
-	 * the channel's value. To work around this problem, you can use {@link #setMinBlue(MyImage)}, {@link #setMinGreen(MyImage)} or {@link #setMinRed(MyImage)}
+	 * the channel's value. To work around this problem, you can use {@link MyImage#setMinBlue()}, {@link MyImage#setMinGreen()} or {@link MyImage#setMinRed()}
 	 * @param myImage the picture the deal with
 	 * @param delta variation of the brightness. 0 means a blak picture. (Can't be less than 0)
 	 */
@@ -95,7 +96,7 @@ public abstract class ImageLab {
 	 * If deltaR = deltaG = deltaB, it will produce the same as {@linkplain #changeBrigthness(MyImage, float)}
 	 * NB: if some pixels don't a color (in other words, if the channel R, G, or B is 0), the multiplication by <code>deltaR</code>,
 	 * <code>deltaG</code> or <code>deltaB</code> passed as parameter, will maybe not produce the expected result, because multiplying by 0 doesn't change
-	 * the channel's value. To work around this problem, you can use {@link #setMinBlue(MyImage)}, {@link #setMinGreen(MyImage)} or {@link #setMinRed(MyImage)}
+	 * the channel's value. To work around this problem, you can use {@link MyImage#setMinBlue()}, {@link MyImage#setMinGreen()} or {@link MyImage#setMinRed()}
 	 * @param myImage the image to deal with
 	 * @param deltaR the variation or the red channel (1 means no changes). Cannot be less than 0.
 	 * @param deltaG the variation or the green channel (1 means no changes). Cannot be less than 0.
@@ -167,7 +168,7 @@ public abstract class ImageLab {
 	 * @param myImage the image to mask
 	 * @param mask the mask itself. The mask area must be defined by a white area -> {@link Colour(255, 255, 255, 255}).
 	 * @param maskX position of the mask. Quit if > myImage.width
-	 * @param maskY position of the mask. Qut if > myImage.height
+	 * @param maskY position of the mask. Quit if > myImage.height
 	 * @param in if true, keep pixels inside the mask.
 	 */
 	public static void mask(MyImage myImage, MyImage mask, int maskX, int maskY, boolean in){

@@ -125,10 +125,6 @@ public class MyImage extends BufferedImage implements Cloneable {
 		return hasAlpha;
 	}
 	
-	public void setHasAlpha(boolean hasAlpha) {
-		this.hasAlpha = hasAlpha;
-	}
-	
 	/**
 	 * Saves the image as PNG file
 	 * @param name without extension
