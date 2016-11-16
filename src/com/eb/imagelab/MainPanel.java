@@ -14,8 +14,8 @@ public class MainPanel extends JPanel{
 	
 	public MainPanel() {
 		try {
-			image = ImageLab.readImage("pictures/orianne.jpg");
-			ImageLab.changeAlpha(image, 0.5f);
+			image = ImageLab.readImage("pictures/img.png");
+			ImageLab.negative(image);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

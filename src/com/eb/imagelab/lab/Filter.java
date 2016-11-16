@@ -24,5 +24,16 @@ public abstract class Filter {
 		myImage.update();
 	}
 	
+	public static void negative(MyImage myImage){
+		for(int i = 0; i < myImage.getPixels().length; i++){
+			for(int j = 0; j < myImage.getPixels()[i].length; j++){
+				myImage.getPixels()[i][j].setR(255 - myImage.getPixels()[i][j].getR());
+				myImage.getPixels()[i][j].setG(255 - myImage.getPixels()[i][j].getG());
+				myImage.getPixels()[i][j].setB(255 - myImage.getPixels()[i][j].getB());
+			}
+		}
+		myImage.update();
+	}
+	
 
 }

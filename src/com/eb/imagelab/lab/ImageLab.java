@@ -1,4 +1,5 @@
 package com.eb.imagelab.lab;
+import java.awt.Font;
 import java.awt.Shape;
 import java.io.File;
 import java.io.IOException;
@@ -166,14 +167,15 @@ public abstract class ImageLab {
 	/**
 	 * Applies a mask on the picture from another picture
 	 * @param myImage the image to mask
-	 * @param mask the mask itself. The mask area must be defined by a white area -> {@link Colour(255, 255, 255, 255}).
+	 * @param mask the mask itself.
+	 * @param colour the mask colour
 	 * @param maskX position of the mask. Quit if > myImage.width
 	 * @param maskY position of the mask. Quit if > myImage.height
 	 * @param in if true, keep pixels inside the mask.
 	 */
-	public static void mask(MyImage myImage, MyImage mask, int maskX, int maskY, boolean in){
-		if(!Utils.isImageValid(myImage) || !Utils.isImageValid(mask)|| maskX >= myImage.getWidth() || maskY >= myImage.getHeight() || mask.getWidth() == 0 || mask.getHeight() == 0)return;
-		Mask.mask(myImage, mask, maskX, maskY, in);
+	public static void mask(MyImage myImage, MyImage mask, Colour colour, int maskX, int maskY, boolean in){
+		if(!Utils.isImageValid(myImage) || !Utils.isImageValid(mask)|| colour == null || maskX >= myImage.getWidth() || maskY >= myImage.getHeight() || mask.getWidth() == 0 || mask.getHeight() == 0)return;
+		Mask.mask(myImage, mask, colour, maskX, maskY, in);
 	}
 	
 	/**
@@ -186,6 +188,28 @@ public abstract class ImageLab {
 	public static void mask(MyImage myImage, Shape shape, boolean in){
 		if(!Utils.isImageValid(myImage) || shape == null)return;
 		Mask.mask(myImage, shape, in);
+	}
+	
+	/**
+	 * Applies a textual mask on the picture
+	 * @param myImage the picture to deal with
+	 * @param text the message to display
+	 * @param font the font. If null, the default will be used (very small)
+	 * @param x the position, must be < image.width
+	 * @param y the position, must be < image.height
+	 */
+	public static void mask(MyImage myImage, String text, Font font, int x, int y){
+		if(!Utils.isImageValid(myImage) || text == null || x >= myImage.getWidth() || y >= myImage.getHeight())return;
+		Mask.mask(myImage, text, font, x, y);
+	}
+	
+	/**
+	 * Inverts all colours' values
+	 * @param myImage the picture
+	 */
+	public static void negative(MyImage myImage){
+		if(!Utils.isImageValid(myImage))return;
+		Filter.negative(myImage);
 	}
 	
 	/**
