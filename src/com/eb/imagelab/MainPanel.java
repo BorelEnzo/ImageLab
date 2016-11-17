@@ -1,10 +1,12 @@
 package com.eb.imagelab;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.IOException;
 import javax.swing.JPanel;
 
 import com.eb.imagelab.lab.ImageLab;
+import com.eb.imagelab.model.EnumRotation;
 import com.eb.imagelab.model.MyImage;
 
 public class MainPanel extends JPanel{
@@ -15,8 +17,6 @@ public class MainPanel extends JPanel{
 	public MainPanel() {
 		try {
 			image = ImageLab.readImage("pictures/img.png");
-			ImageLab.negative(image);
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

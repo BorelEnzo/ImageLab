@@ -1,7 +1,7 @@
 package com.eb.imagelab.lab;
 
 import com.eb.imagelab.model.Colour;
-import com.eb.imagelab.model.Constants;
+import com.eb.imagelab.model.EnumRotation;
 import com.eb.imagelab.model.MyImage;
 
 /**
@@ -56,12 +56,9 @@ public abstract class ImageFormatter {
 	}
 	
 
-	public static MyImage rotate(MyImage myImage, int rotation) {
-		if(rotation < Constants.ROTATE_PLUS_90 || rotation > Constants.ROTATE_180){
-			rotation = Constants.ROTATE_PLUS_90;
-		}
+	public static MyImage rotate(MyImage myImage, EnumRotation rotation) {
 		MyImage newImage;
-		if(rotation == Constants.ROTATE_180){
+		if(rotation == EnumRotation.ROTATE_180){
 			newImage = new MyImage(myImage.getWidth(), myImage.getHeight(), myImage.getType());
 		}
 		else{
@@ -70,13 +67,13 @@ public abstract class ImageFormatter {
 		for(int i = 0; i < newImage.getPixels().length; i++){
 			for(int j = 0; j < newImage.getPixels()[i].length; j++){
 				switch (rotation) {
-				case Constants.ROTATE_180:
+				case ROTATE_180:
 					newImage.getPixels()[i][j] = myImage.getPixels()[myImage.getPixels().length -1 -i][myImage.getPixels()[i].length -1 -j];
 					break;
-				case Constants.ROTATE_MINUS_90:
+				case ROTATE_MINUS_90:
 					newImage.getPixels()[i][j] = myImage.getPixels()[j][newImage.getPixels().length -1 -i];
 					break;
-				case Constants.ROTATE_PLUS_90:
+				case ROTATE_PLUS_90:
 					newImage.getPixels()[i][j] = myImage.getPixels()[newImage.getPixels()[i].length - 1 -j][i];
 					break;
 				}

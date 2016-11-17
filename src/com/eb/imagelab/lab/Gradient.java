@@ -53,5 +53,4 @@ public abstract class Gradient {
 		}
 		myImage.update();
 	}
-
 }

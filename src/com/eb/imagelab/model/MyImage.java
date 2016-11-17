@@ -1,12 +1,15 @@
 package com.eb.imagelab.model;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.eb.imagelab.lab.ImageLab;
 import com.eb.imagelab.lab.Utils;
 
 /**
@@ -38,7 +41,7 @@ public class MyImage extends BufferedImage implements Cloneable {
 	public MyImage(BufferedImage read) {
 		super(read.getWidth(), read.getHeight(), read.getType());
 		setData(read.getData());
-		pixels = new Colour[getHeight()][getWidth()];
+		pixels = new Colour[read.getHeight()][read.getWidth()];
 	}
 	
 	/**
@@ -205,4 +208,34 @@ public class MyImage extends BufferedImage implements Cloneable {
 		}
 		update();
 	}
+	
+	/**
+	 * Similar as: ImageLab.crop(image, x, image.width, y, image.height)
+	 */
+	@Override
+	public MyImage getSubimage(int x, int y, int w, int h) {
+		return ImageLab.crop(this, x, w, y, h);
+	}
+	
+	/**
+	 * Returns a new MyImage, which is a scaled version of the current one.
+	 */
+	@Override
+	public MyImage getScaledInstance(int width, int height, int hints) {
+		BufferedImage bfImage = new BufferedImage(width, height, hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		Graphics2D bGr = bfImage.createGraphics();
+	    bGr.drawImage(super.getScaledInstance(width, height, hints), 0, 0, null);
+	    bGr.dispose();
+	    MyImage newMyImage = new MyImage(bfImage);
+	    final int[] pixels = ((DataBufferInt)newMyImage.getRaster().getDataBuffer()).getData();
+		for(int i = 0; i < newMyImage.getPixels().length; i++){
+			for(int j = 0; j < newMyImage.getPixels()[i].length; j++){
+				newMyImage.pixels[i][j] = new Colour(pixels[i * newMyImage.getPixels().length + j]);
+			}
+		}
+	    return newMyImage;
+	}
+	
+	
+	
 }

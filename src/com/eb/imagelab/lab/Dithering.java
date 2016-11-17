@@ -14,22 +14,11 @@ import com.eb.imagelab.model.MyImage;
  */
 public abstract class Dithering {
 	
-	private static final Colour[] colours = new Colour[]{
-			new Colour(255, 0, 0, 0),
-			new Colour(255, 0, 0, 255),
-			new Colour(255, 0, 255, 0),
-			new Colour(255, 0, 255, 255),
-			new Colour(255, 255, 0, 0),
-			new Colour(255, 255, 0, 255),
-			new Colour(255, 255, 255, 0),
-			new Colour(255, 255, 255, 255)
-		};
-	
 	private static int findClosestColor(Colour colour){
 		if(colour == null)return 0;
 		int closest = 0;
-		for(int c = 0; c < colours.length; c++){
-			if(colours[c].difference(colour) < colours[closest].difference(colour)){
+		for(int c = 0; c < Utils.getColours().length; c++){
+			if(Utils.getColours()[c].difference(colour) < Utils.getColours()[closest].difference(colour)){
 				closest = c;
 			}
 		}
@@ -42,7 +31,7 @@ public abstract class Dithering {
 		for(int y = 0; y < myImage.getPixels().length; y++){
 			for(int x = 0; x < myImage.getPixels()[y].length; x++){
 				oldColour = bitmap[y][x];
-				newColour = colours[findClosestColor(oldColour)];
+				newColour = Utils.getColours()[findClosestColor(oldColour)];
 				newColour.setA(myImage.getPixels()[y][x].getA());
 				myImage.getPixels()[y][x] = newColour.clamp();
 				oldColour = oldColour.subtract(newColour);

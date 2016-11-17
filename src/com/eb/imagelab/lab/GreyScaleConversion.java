@@ -1,7 +1,7 @@
 package com.eb.imagelab.lab;
 
 import com.eb.imagelab.model.Colour;
-import com.eb.imagelab.model.Constants;
+import com.eb.imagelab.model.EnumGreyScale;
 import com.eb.imagelab.model.MyImage;
 
 /**
@@ -11,10 +11,7 @@ import com.eb.imagelab.model.MyImage;
  */
 public abstract class GreyScaleConversion {
 	
-	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, int typeGreyScale){
-		if(typeGreyScale < Constants.GREY_SCALE_BT601 || typeGreyScale > Constants.GREY_SCALE_BLUE_CHANNEL){
-			typeGreyScale = Constants.GREY_SCALE_AVG;
-		}
+	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, EnumGreyScale typeGreyScale){
 		float grey;
 		float diffRed, diffGreen, diffBlue, x, y, z, invDR, invDG, invDB;
 		final float height = (float)myImage.getHeight();
@@ -60,39 +57,31 @@ public abstract class GreyScaleConversion {
 		myImage.update();
 	}
 	
-	/**
-	 * Computes the value of the color, according to the type of grey scale and the value of the actual color
-	 * @param code the type of grey scale, should be a constant {@link Constants#GREY_SCALE_xxxxxxxxx}
-	 * @return the code of the grey (8 bits)
-	 */
-	private static int getGrey(int code, Colour colour){
+	private static int getGrey(EnumGreyScale code, Colour colour){
 		switch(code){
-		case Constants.GREY_SCALE_BT709:
+		case GREY_SCALE_BT709:
 			return Math.round(0.2126f * (colour.getR() & 0xFF) + 0.7152f * (colour.getG() & 0xFF) + 0.0722f * (colour.getB() & 0xFF));
-		case Constants.GREY_SCALE_BT601:
+		case GREY_SCALE_BT601:
 			return Math.round(0.299f * (colour.getR() & 0xFF) + 0.587f * (colour.getG() & 0xFF) + 0.114f * (colour.getB() & 0xFF));
-		case Constants.GREY_SCALE_AVG:
+		case GREY_SCALE_AVG:
 			return (int) ((colour.getR() + colour.getG() + colour.getB()) / 3f);
-		case Constants.GREY_SCALE_DESATURATION:
+		case GREY_SCALE_DESATURATION:
 			return (int) ((float)(Math.max(colour.getR(), Math.max(colour.getG(), colour.getB())) + Math.min(colour.getR(), Math.min(colour.getG(), colour.getB()))) / 2f);
-		case Constants.GREY_SCALE_DECOMPOSITION_MIN:
+		case GREY_SCALE_DECOMPOSITION_MIN:
 			return Math.min(colour.getR(), Math.min(colour.getG(), colour.getB()));
-		case Constants.GREY_SCALE_DECOMPOSITION_MAX:
+		case GREY_SCALE_DECOMPOSITION_MAX:
 			return Math.max(colour.getR(), Math.max(colour.getG(), colour.getB()));
-		case Constants.GREY_SCALE_RED_CHANNEL:
+		case GREY_SCALE_RED_CHANNEL:
 			return colour.getR();
-		case Constants.GREY_SCALE_GREEN_CHANNEL:
+		case GREY_SCALE_GREEN_CHANNEL:
 			return colour.getG();
-		case Constants.GREY_SCALE_BLUE_CHANNEL:
+		case GREY_SCALE_BLUE_CHANNEL:
 			return colour.getB();
 		}
 		return 0;
 	}
 	
-	public static void toGreyScale(MyImage myImage, int type) {
-		if(type < Constants.GREY_SCALE_BT601 || type > Constants.GREY_SCALE_BLUE_CHANNEL){
-			type = Constants.GREY_SCALE_AVG;
-		}
+	public static void toGreyScale(MyImage myImage, EnumGreyScale type) {
 		int grey;
 		for(int i = 0;  i < myImage.getPixels().length; i++){
 			for(int j = 0;  j < myImage.getPixels()[i].length; j++){

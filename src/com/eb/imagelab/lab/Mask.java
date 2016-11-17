@@ -20,24 +20,12 @@ public abstract class Mask {
 	
 	
 	public static void mask(MyImage myImage, MyImage mask, Colour maskColour, int maskX, int maskY, boolean in){
-		if(in){
-			for(int i = 0; i < myImage.getPixels().length; i++){
-				for(int j = 0; j < myImage.getPixels()[i].length; j++){
-					if(i - maskY >= 0 && j - maskX >= 0 && i - maskY < mask.getPixels().length && j - maskX < mask.getPixels()[0].length){
-						if(mask.getPixels()[i - maskY][j - maskX].getColour() != maskColour.getColour()){
-							myImage.getPixels()[i][j].setColour(0);
-						}
-					}
-				}
-			}
-		}
-		else{
-			for(int i = 0; i < myImage.getPixels().length; i++){
-				for(int j = 0; j < myImage.getPixels()[i].length; j++){
-					if(i - maskY >= 0 && j - maskX >= 0 && i - maskY < mask.getPixels().length && j - maskX < mask.getPixels()[0].length){
-						if(mask.getPixels()[i - maskY][j - maskX].getColour() == maskColour.getColour()){
-							myImage.getPixels()[i][j].setColour(0);
-						}
+		for(int i = 0; i < myImage.getPixels().length; i++){
+			for(int j = 0; j < myImage.getPixels()[i].length; j++){
+				if(i - maskY >= 0 && j - maskX >= 0 && i - maskY < mask.getPixels().length && j - maskX < mask.getPixels()[0].length){
+					if((in && mask.getPixels()[i - maskY][j - maskX].getColour() != maskColour.getColour()) || 
+						(!in && mask.getPixels()[i - maskY][j - maskX].getColour() == maskColour.getColour())){
+						myImage.getPixels()[i][j].setColour(0);
 					}
 				}
 			}
@@ -52,21 +40,10 @@ public abstract class Mask {
 		graphics2d.fill(shape);
 		graphics2d.dispose();
 		final int[] pixelsMask = ((DataBufferInt)mask.getRaster().getDataBuffer()).getData();
-		if(in){
-			for(int i = 0; i < myImage.getPixels().length; i++){
-				for(int j = 0; j < myImage.getPixels()[i].length; j++){
-					if(pixelsMask[i * myImage.getPixels().length + j] != -1){
-						myImage.getPixels()[i][j].setColour(0);
-					}
-				}
-			}
-		}
-		else{
-			for(int i = 0; i < myImage.getPixels().length; i++){
-				for(int j = 0; j < myImage.getPixels()[i].length; j++){
-					if(pixelsMask[i * myImage.getPixels().length + j] == -1){
-						myImage.getPixels()[i][j].setColour(0);
-					}
+		for(int i = 0; i < myImage.getPixels().length; i++){
+			for(int j = 0; j < myImage.getPixels()[i].length; j++){
+				if((in &&  pixelsMask[i * myImage.getPixels().length + j] != -1) || (!in && pixelsMask[i * myImage.getPixels().length + j] == -1)){
+					myImage.getPixels()[i][j].setColour(0);
 				}
 			}
 		}

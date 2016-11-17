@@ -7,7 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.eb.imagelab.model.Colour;
-import com.eb.imagelab.model.Constants;
+import com.eb.imagelab.model.EnumGreyScale;
+import com.eb.imagelab.model.EnumRotation;
 import com.eb.imagelab.model.MyImage;
 
 /**
@@ -61,6 +62,19 @@ public abstract class ImageLab {
 	public static void blur(MyImage myImage, int radius){
 		if (!Utils.isImageValid(myImage) || radius <= 0)return;
 		Blur.blur(myImage, radius);
+	}
+	
+	/**
+	 * Applies ablur only on a specific area. Can dramatically slow down the program if the radius is too high !
+	 * We recommend you to start with a value < 10, and then increase the size if necessary
+	 * @param myImage the picture
+	 * @param shape the shape used to define the blurred area
+	 * @param radius of th blur
+	 * @param in true = blur inside the shape
+	 */
+	public static void blurLocalShape(MyImage myImage, Shape shape, int radius, boolean in){
+		if(!Utils.isImageValid(myImage) || shape == null || radius <= 0)return;
+		Blur.blurLocalShape(myImage, shape, radius, in);
 	}
 	
 	/**
@@ -156,11 +170,10 @@ public abstract class ImageLab {
 	 * Applies a kind of gradient, from the colored version to the grey scale version of this picture
 	 * @param myImage the picture to deal with
 	 * @param vertical direction of the gradient
-	 * @param typeGreyScale type of grey scale. Should be a constants, like {@link Constants#GREY_SCALE_xxxx}
-	 * if the type is wrong, {@link Constants#GREY_SCALE_AVG} will be used
+	 * @param typeGreyScale type of grey scale.
 	 */
-	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, int typeGreyScale){
-		if(!Utils.isImageValid(myImage))return;
+	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, EnumGreyScale typeGreyScale){
+		if(!Utils.isImageValid(myImage) || typeGreyScale == null)return;
 		GreyScaleConversion.fromColouredToGreyScale(myImage, vertical, typeGreyScale);
 	}
 	
@@ -252,22 +265,21 @@ public abstract class ImageLab {
 	/**
 	 * Rotates the picture
 	 * @param myImage the picture
-	 * @param rotation {@linkplain Constants#ROTATE_180} OR {@linkplain Constants#ROTATE_MINUS_90} OR {@linkplain Constants#ROTATE_PLUS_90}
-	 * else the default is {@linkplain Constants#ROTATE_PLUS_90}
+	 * @param rotation the type of rotation
 	 * @return the new image
 	 */
-	public static MyImage rotate(MyImage myImage, int rotation) {
-		if(!Utils.isImageValid(myImage))return null;
+	public static MyImage rotate(MyImage myImage, EnumRotation rotation) {
+		if(!Utils.isImageValid(myImage) || rotation == null)return null;
 		return ImageFormatter.rotate(myImage, rotation);
 	}
 	
 	/**
 	 * Transforms the image as a grey-scale picture
 	 * If the <code>type</code> is wrong, the default value would be {@link Constants#GREY_SCALE_AVG}
-	 * @param type type of filter. Should be a constant of {@linkplain Constants} such that : GREY_SCALE_xxxxx
+	 * @param type type of filter
 	 */
-	public static void toGreyScale(MyImage myImage, int type){
-		if(!Utils.isImageValid(myImage))return;
+	public static void toGreyScale(MyImage myImage, EnumGreyScale type){
+		if(!Utils.isImageValid(myImage) || type == null)return;
 		GreyScaleConversion.toGreyScale(myImage, type);
 		
 	}

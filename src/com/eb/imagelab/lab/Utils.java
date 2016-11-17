@@ -5,6 +5,17 @@ import com.eb.imagelab.model.MyImage;
 
 public abstract class Utils {
 	
+	private static final Colour[] colours = new Colour[]{
+			new Colour(255, 0, 0, 0),
+			new Colour(255, 0, 0, 255),
+			new Colour(255, 0, 255, 0),
+			new Colour(255, 0, 255, 255),
+			new Colour(255, 255, 0, 0),
+			new Colour(255, 255, 0, 255),
+			new Colour(255, 255, 255, 0),
+			new Colour(255, 255, 255, 255)
+		};
+	
 	public static Colour[][] deepCopyColoursArray(Colour[][] original){
 		if(original == null){
 			return  null;
@@ -24,5 +35,8 @@ public abstract class Utils {
 	public static boolean isImageValid(MyImage myImage){
 		return !(myImage == null || myImage.getPixels() == null || myImage.getPixels().length != myImage.getHeight() || myImage.getPixels()[0].length != myImage.getWidth());
 	}
-
+	
+	public static Colour[] getColours() {
+		return colours;
+	}
 }
