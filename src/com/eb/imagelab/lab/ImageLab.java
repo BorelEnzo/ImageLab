@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import com.eb.imagelab.model.Colour;
 import com.eb.imagelab.model.EnumGreyScale;
 import com.eb.imagelab.model.EnumRotation;
+import com.eb.imagelab.model.Motion;
 import com.eb.imagelab.model.MyImage;
 
 /**
@@ -217,6 +218,16 @@ public abstract class ImageLab {
 	}
 	
 	/**
+	 * Applies a blur in one direction
+	 * @param myImage the picture
+	 * @param radius the radius of the blur
+	 * @param motion {@linkplain Motion#HORIZONTAL}, {@linkplain Motion#VERTICAL}, {@linkplain Motion#DIAGONAL_TO_BOTTOM}, or {@linkplain Motion#DIAGONAL_TO_TOP}
+	 */
+	public static void motionBlurOneDirection(MyImage myImage, int radius, Motion motion){
+		if(!Utils.isImageValid(myImage) || radius <= 0 || motion == null)return;
+		Blur.motionBlurOneDirection(myImage, radius, motion);
+	}
+	/**
 	 * Inverts all colours' values
 	 * @param myImage the picture
 	 */
@@ -237,6 +248,16 @@ public abstract class ImageLab {
 	public static void paste(MyImage myImage, MyImage destinationImage, int x, int y){
 		if(!Utils.isImageValid(myImage) || !Utils.isImageValid(destinationImage))return;
 		ImageFormatter.paste(myImage, destinationImage, x, y);
+	}
+	
+	/**
+	 * Transformes the picture as a kind of "mosaic" by averaging pixel's areas
+	 * @param myImage the picture
+	 * @param pixelDiameter half of new pixels' width
+	 */
+	public static void pixelate(MyImage myImage, int pixelDiameter){
+		if(!Utils.isImageValid(myImage) || pixelDiameter <= 0)return;
+		Effect.pixelate(myImage, pixelDiameter);
 	}
 	
 	/**
@@ -282,5 +303,14 @@ public abstract class ImageLab {
 		if(!Utils.isImageValid(myImage) || type == null)return;
 		GreyScaleConversion.toGreyScale(myImage, type);
 		
+	}
+	
+	/**
+	 * Transforms the image into a sepia image
+	 * @param myImage th picture
+	 */
+	public static void toSepia(MyImage myImage){
+		if(!Utils.isImageValid(myImage))return;
+		Filter.toSepia(myImage);
 	}
 }

@@ -35,5 +35,17 @@ public abstract class Filter {
 		myImage.update();
 	}
 	
-
+	
+	public static void toSepia(MyImage myImage){
+		Colour c;
+		for(int i = 0; i < myImage.getPixels().length; i++){
+			for(int j = 0; j < myImage.getPixels()[i].length; j++){
+				c = myImage.getPixels()[i][j];
+				myImage.getPixels()[i][j].setR((int) (c.getR() * 0.393 + c.getG() * 0.769 + c.getB() * 0.189));
+				myImage.getPixels()[i][j].setG((int) (c.getR() * 0.349 + c.getG() * 0.686 + c.getB() * 0.168));
+				myImage.getPixels()[i][j].setB((int) (c.getR() * 0.272 + c.getG() * 0.534 + c.getB() * 0.131));
+			}
+		}
+		myImage.update();
+	}
 }
