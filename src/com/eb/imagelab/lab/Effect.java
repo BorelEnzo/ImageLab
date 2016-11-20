@@ -1,9 +1,33 @@
 package com.eb.imagelab.lab;
+
 import com.eb.imagelab.model.Colour;
 import com.eb.imagelab.model.EnumGreyScale;
 import com.eb.imagelab.model.MyImage;
 
-public abstract class Effect {
+/**
+ * The Class effect contains several methods about effects to apply on the picture
+ * Inspired by http://lodev.org/cgtutor/filtering.html
+ * @author Enzo Borel
+ */
+
+public abstract class Effect extends AbstractLab{
+	
+	public static void applyEmbossFilter(MyImage myImage, boolean pressed, int bumpSize){
+		if(bumpSize < 0)bumpSize = 0;
+		final float[][] matrixFilter = new float[bumpSize * 2 + 1][bumpSize * 2 + 1];
+		for(int i = 0; i < matrixFilter.length; i++){
+			for(int j = 0; j < matrixFilter[i].length; j++){
+				if(j > matrixFilter.length - 1 - i){
+					matrixFilter[i][j] = pressed ? -1 : 1;
+				}
+				else if(j < matrixFilter.length - 1 -i){
+					matrixFilter[i][j] = pressed ? 1 : -1;
+				}
+			}
+		}
+		applyGenericFilter(myImage, matrixFilter, bumpSize, 1, 128);
+		GreyScaleConversion.toGreyScale(myImage, EnumGreyScale.GREY_SCALE_AVG);
+	}
 	
 	public static void applySketchEffet(MyImage myImage, int intensity){
 		GreyScaleConversion.toGreyScale(myImage, EnumGreyScale.GREY_SCALE_AVG);
@@ -28,6 +52,15 @@ public abstract class Effect {
 		float image = (float)i2;	
 	    float mask = (float)i1;
 	    return ((int) (image == 255 ? image : Math.min(255, (((long)mask << 8 ) / (255 - image)))));
+	}
+	
+	public static void findEdges(MyImage myImage){
+		final float[][] matrixFilter = new float[][]{
+			{-1, -1, -1},
+			{-1, 8, -1},
+			{-1, -1, -1}
+		};
+		applyGenericFilter(myImage, matrixFilter, 1, 1, 0);
 	}
 	
 	public static void pixelate(MyImage myImage, int pixelDiameter){
@@ -63,5 +96,4 @@ public abstract class Effect {
 		}
 		myImage.update();
 	}
-
 }

@@ -11,7 +11,7 @@ import com.eb.imagelab.model.MyImage;
  */
 public abstract class GreyScaleConversion {
 	
-	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, EnumGreyScale typeGreyScale){
+	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, boolean startWithGreyScale, EnumGreyScale typeGreyScale){
 		float grey;
 		float diffRed, diffGreen, diffBlue, x, y, z, invDR, invDG, invDB;
 		final float height = (float)myImage.getHeight();
@@ -26,9 +26,17 @@ public abstract class GreyScaleConversion {
 					invDR = 1f / diffRed;
 					invDG = 1f / diffGreen;
 					invDB = 1f / diffBlue;
-					x = invDR + (1 - invDR) * ((float)i / height);
-					y = invDG + (1 - invDG) * ((float)i / height);
-					z = invDB + (1 - invDB) * ((float)i / height);
+					if(!startWithGreyScale){
+						x = invDR + (1 - invDR) * ((float)i / height);
+						y = invDG + (1 - invDG) * ((float)i / height);
+						z = invDB + (1 - invDB) * ((float)i / height);
+					}
+					else{
+						x = invDR + (1 - invDR) * ((float)(height - i) / height);
+						y = invDG + (1 - invDG) * ((float)(height - i) / height);
+						z = invDB + (1 - invDB) * ((float)(height - i) / height);
+					}
+					
 					myImage.getPixels()[i][j].setR((int) (((float)myImage.getPixels()[i][j].getR()) * diffRed * x));
 					myImage.getPixels()[i][j].setG((int) (((float)myImage.getPixels()[i][j].getG()) * diffGreen * y));
 					myImage.getPixels()[i][j].setB((int) (((float)myImage.getPixels()[i][j].getB()) * diffBlue * z));
@@ -45,9 +53,16 @@ public abstract class GreyScaleConversion {
 					invDR = 1f / diffRed;
 					invDG = 1f / diffGreen;
 					invDB = 1f / diffBlue;
-					x = invDR + (1 - invDR) * ((float)j / width);
-					y = invDG +(1 - invDG) * ((float)j / width);
-					z = invDB + (1 - invDB) * ((float)j / width);
+					if(!startWithGreyScale){
+						x = invDR + (1 - invDR) * ((float)j / width);
+						y = invDG +(1 - invDG) * ((float)j / width);
+						z = invDB + (1 - invDB) * ((float)j / width);
+					}
+					else{
+						x = invDR + (1 - invDR) * ((float)(width - j) / width);
+						y = invDG +(1 - invDG) * ((float)(width - j) / width);
+						z = invDB + (1 - invDB) * ((float)(width - j) / width);
+					}
 					myImage.getPixels()[i][j].setR((int) (((float)myImage.getPixels()[i][j].getR()) * diffRed * x));
 					myImage.getPixels()[i][j].setG((int) (((float)myImage.getPixels()[i][j].getG()) * diffGreen * y));
 					myImage.getPixels()[i][j].setB((int) (((float)myImage.getPixels()[i][j].getB()) * diffBlue * z));

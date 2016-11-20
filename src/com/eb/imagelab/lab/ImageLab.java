@@ -1,6 +1,7 @@
 package com.eb.imagelab.lab;
 import java.awt.Font;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -37,6 +38,18 @@ public abstract class ImageLab {
 	}
 	
 	/**
+	 * Applies an emboss filter on the picture. Then, it gives a kinf od 3d shadow effect, in grey scale.
+	 * @param myImage the picture
+	 * @param the 'orientation' of the bump. Depends on the picture
+	 * @param the size of the bump. Should not be too big. Minimum is 0, which gives a grey picture.
+	 * Recommended size = 1 or 2
+	 */
+	public static void applyEmbossFilter(MyImage myImage, boolean pressed, int bumpSize){
+		if(!Utils.isImageValid(myImage))return;
+		Effect.applyEmbossFilter(myImage, pressed, bumpSize);
+	}
+	
+	/**
 	 * Applies a linear colored gradient on a specific area
 	 * NB: if a picture doesn't contain a color (in other words, if the channel R, G, or B is 0), and if this color is similar
 	 * to the <code>colour</code> passed as parameter, maybe it will not produce the expected result, because multiplying by 0 doesn't change
@@ -50,6 +63,11 @@ public abstract class ImageLab {
 	public static void applyLinearGradient(MyImage myImage, Colour fromColour, Colour toColour, boolean vertical, int startX, int width, int startY, int height){
 		if(!Utils.isImageValid(myImage) || fromColour == null || toColour == null || startX >= myImage.getWidth() || width <= 0 || startY >= myImage.getHeight() || height <= 0)return;
 		Gradient.applyLinearGradient(myImage, fromColour, toColour, vertical, startX, width, startY, height);
+	}
+	
+	public static void applySketchEffet(MyImage myImage, int intensity){
+		if (!Utils.isImageValid(myImage))return;
+		Effect.applySketchEffet(myImage, intensity);
 	}
 
 
@@ -158,6 +176,15 @@ public abstract class ImageLab {
 	}
 	
 	/**
+	 * Transforms the pictures into a blck picture where only edges appear
+	 * @param myImage the picture
+	 */
+	public static void findEdges(MyImage myImage){
+		if(!Utils.isImageValid(myImage))return;
+		Effect.findEdges(myImage);
+	}
+	
+	/**
 	 * Flips the picture
 	 * @param myImage
 	 * @param vertical along X axis (true) or Y axis (false)
@@ -170,12 +197,13 @@ public abstract class ImageLab {
 	/**
 	 * Applies a kind of gradient, from the colored version to the grey scale version of this picture
 	 * @param myImage the picture to deal with
-	 * @param vertical direction of the gradient
+	 * @param vertical direction of the gradient.
+	 * @param startWithGreyScale if true, the first end is the 'grey scale' one, else it's the coloured one
 	 * @param typeGreyScale type of grey scale.
 	 */
-	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, EnumGreyScale typeGreyScale){
+	public static void fromColouredToGreyScale(MyImage myImage, boolean vertical, boolean startWithGreyScale, EnumGreyScale typeGreyScale){
 		if(!Utils.isImageValid(myImage) || typeGreyScale == null)return;
-		GreyScaleConversion.fromColouredToGreyScale(myImage, vertical, typeGreyScale);
+		GreyScaleConversion.fromColouredToGreyScale(myImage, vertical, startWithGreyScale, typeGreyScale);
 	}
 	
 	/**
@@ -246,7 +274,7 @@ public abstract class ImageLab {
 	 * @param y where to place image whithin the destination
 	 */
 	public static void paste(MyImage myImage, MyImage destinationImage, int x, int y){
-		if(!Utils.isImageValid(myImage) || !Utils.isImageValid(destinationImage))return;
+		if(!Utils.isImageValid(myImage) || !Utils.isImageValid(destinationImage) || x >= destinationImage.getWidth() || y >= destinationImage.getHeight())return;
 		ImageFormatter.paste(myImage, destinationImage, x, y);
 	}
 	
@@ -271,7 +299,15 @@ public abstract class ImageLab {
 			try{
 				File file = new File(path);
 				if(file.exists()){
-					MyImage myImage = new MyImage(ImageIO.read(file));
+					MyImage myImage;
+					BufferedImage bufImg = ImageIO.read(file);
+				    BufferedImage convertedImg = new BufferedImage(bufImg.getWidth(), bufImg.getHeight(), bufImg.getType());
+				    if(convertedImg.getAlphaRaster() != null){
+				    	myImage = new MyImage(bufImg, BufferedImage.TYPE_INT_ARGB);
+				    }
+				    else{
+				    	myImage = new MyImage(bufImg, BufferedImage.TYPE_INT_RGB);
+				    }
 					myImage.readPixels();
 					return myImage;
 				}

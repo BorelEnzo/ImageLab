@@ -47,8 +47,9 @@ public abstract class ImageFormatter {
 	}
 
 	public static void paste(MyImage myImage, MyImage destinationImage, int x, int y){
-		for(int i = y; i < myImage.getPixels().length; i++){
-			for(int j = x; j < myImage.getPixels()[i].length; j++){
+		for(int i = y; i < destinationImage.getPixels().length && i - y < myImage.getPixels().length; i++){
+			for(int j = x; j < destinationImage.getPixels()[0].length && j - x < myImage.getPixels()[0].length; j++){
+				if(i >= 0 && j >= 0)
 				destinationImage.getPixels()[i][j] = myImage.getPixels()[i - y][j - x];
 			}
 		}
