@@ -13,14 +13,18 @@ import com.eb.imagelab.lab.Utils;
 
 /**
  * The Class MyImage.
- * MyImage is a kind of {@link BufferedImage}, which is specified by a flag named {@link #hasAlpha}, 
- * and an array containing the {@link Colour}
+ * MyImage is a kind of {@link BufferedImage}, which is specified by an array containing the {@link Colour}
+ * You should pay attention about one thing:
+ * the vast majority of operations on a {@link MyImage} use its {@link Colour} matrix {@link #pixels}. If you
+ * use some built-in function, you should update {@link #pixels}, else effects will NOT be applied if {@link #pixels} is null
+ * - {@link #getSubimage(int, int, int, int)}
+ * - {@link #getScaledInstance(int, int, int)}
+ * already manage this case
  * @author Enzo Borel
  */
 public class MyImage extends BufferedImage implements Cloneable {
 	
 	private Colour[][] pixels;
-	private boolean hasAlpha;
 
 	/**
 	 * Creates an empty {@link MyImage}
@@ -30,14 +34,12 @@ public class MyImage extends BufferedImage implements Cloneable {
 	 */
 	public MyImage(BufferedImage image, int type) {
 		super(image.getWidth(), image.getHeight(), type);
-		hasAlpha = getAlphaRaster() != null;
 		setData(image.getData());
 		pixels = new Colour[getHeight()][getWidth()];
 	}
 	
 	public MyImage(int width, int height, int type){
 		super(width, height, type);
-		hasAlpha = getAlphaRaster() != null;
 		pixels = new Colour[getHeight()][getWidth()];
 	}
 	
@@ -71,10 +73,6 @@ public class MyImage extends BufferedImage implements Cloneable {
 		return pixels;
 	}
 	
-	public boolean hasAlpha() {
-		return hasAlpha;
-	}
-	
 	/**
 	 * Saves the image as PNG file
 	 * @param name without extension
@@ -98,7 +96,6 @@ public class MyImage extends BufferedImage implements Cloneable {
 	@Override
 	public MyImage clone() {
 		MyImage result = new MyImage(this, getType());
-		result.hasAlpha = hasAlpha;
 		result.pixels = Utils.deepCopyColoursArray(pixels);
 		return result;
 	}
@@ -175,7 +172,7 @@ public class MyImage extends BufferedImage implements Cloneable {
 	 */
 	@Override
 	public MyImage getScaledInstance(int width, int height, int hints) {
-		BufferedImage bfImage = new BufferedImage(width, height, hasAlpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		BufferedImage bfImage = new BufferedImage(width, height, getColorModel().hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		Graphics2D bGr = bfImage.createGraphics();
 	    bGr.drawImage(super.getScaledInstance(width, height, hints), 0, 0, null);
 	    bGr.dispose();

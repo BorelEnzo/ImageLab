@@ -16,7 +16,6 @@ public class MainPanel extends JPanel{
 	public MainPanel() {
 		try {
 			image = ImageLab.readImage("pictures/img.png");
-			ImageLab.fromColouredToGreyScale(image, false, false, EnumGreyScale.GREY_SCALE_AVG);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

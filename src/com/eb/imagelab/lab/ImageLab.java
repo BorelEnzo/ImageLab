@@ -40,8 +40,8 @@ public abstract class ImageLab {
 	/**
 	 * Applies an emboss filter on the picture. Then, it gives a kinf od 3d shadow effect, in grey scale.
 	 * @param myImage the picture
-	 * @param the 'orientation' of the bump. Depends on the picture
-	 * @param the size of the bump. Should not be too big. Minimum is 0, which gives a grey picture.
+	 * @param pressed the 'orientation' of the bump. Depends on the picture
+	 * @param bumpSize the size of the bump. Should not be too big. Minimum is 0 (if bumpSize < 0, bumpSize = 0) which gives a grey picture.
 	 * Recommended size = 1 or 2
 	 */
 	public static void applyEmbossFilter(MyImage myImage, boolean pressed, int bumpSize){
@@ -65,8 +65,14 @@ public abstract class ImageLab {
 		Gradient.applyLinearGradient(myImage, fromColour, toColour, vertical, startX, width, startY, height);
 	}
 	
+	/**
+	 * Applies a filter on the picture, makes it looking like a drawing.
+	 * @param myImage the picture
+	 * @param intensity if too big, loss of effect, because edges will be more visible
+	 * if 0, gives an empty picture
+	 */
 	public static void applySketchEffet(MyImage myImage, int intensity){
-		if (!Utils.isImageValid(myImage))return;
+		if (!Utils.isImageValid(myImage) || intensity < 0)return;
 		Effect.applySketchEffet(myImage, intensity);
 	}
 
@@ -102,15 +108,26 @@ public abstract class ImageLab {
 	 * NB : if the value of the alpha channel is 0 from some pixels, and if you want more opacity, it will maybe not produce the expected result
 	 * on these pixels,because multiplyling by 0 doesn't change the value. To work around this problem, you can use {@link MyImage#setMinAlpha()}
 	 * @param myImage the picture to deal with
-	 * @param delta the variation of the transparency (delta = 1 means no changes)
+	 * @param delta the variation of the transparency (delta = 1 means no changes, negative not allowed)
 	 */
 	public static void changeAlpha(MyImage myImage, float delta){
-		if(!Utils.isImageValid(myImage) || !myImage.hasAlpha() || delta == 1)return;
+		if(!Utils.isImageValid(myImage) || !myImage.getColorModel().hasAlpha() || delta == 1 || delta < 0)return;
 		RatioModifier.changeAlpha(myImage, delta);
 	}
 	
 	/**
-	 * Changes the brightness of the picture.
+	 * Similar as {@link #changeContrast(MyImage, float)}, however, this one applies the same modification everywhere,
+	 * because the operation is an addition by a constant.
+	 * @param myImage the picture
+	 * @param brightness [-255; +255]. if 0, nothing will happen
+	 */
+	public static void changeBrightness(MyImage myImage, int brightness){
+		if(!Utils.isImageValid(myImage) || brightness == 0)return;
+		RatioModifier.changeBrightness(myImage, brightness);
+	}
+	
+	/**
+	 * Changes the contrast of the picture.
 	 * Even if delta is very high, maybe the picture will still a little bit colored. It's because the value of each channel is multiplied by
 	 * delta. Therefore, if the value of the channel is 0, it can't be white.
 	 * To restore the default value, call this function with the multiplicative inverse of the previous value as delta
@@ -118,11 +135,11 @@ public abstract class ImageLab {
 	 * passed as parameter, will maybe not produce the expected result, because multiplying by 0 doesn't change
 	 * the channel's value. To work around this problem, you can use {@link MyImage#setMinBlue()}, {@link MyImage#setMinGreen()} or {@link MyImage#setMinRed()}
 	 * @param myImage the picture the deal with
-	 * @param delta variation of the brightness. 0 means a blak picture. (Can't be less than 0)
+	 * @param delta variation of the contrast. 0 means a black picture. (Can't be less than 0)
 	 */
-	public static void changeBrigthness(MyImage myImage, float delta){
-		if(!Utils.isImageValid(myImage) || delta == 1)return;
-		RatioModifier.changeBrigthness(myImage, delta);
+	public static void changeContrast(MyImage myImage, float delta){
+		if(!Utils.isImageValid(myImage) || delta == 1 || delta < 0)return;
+		RatioModifier.changeContrast(myImage, delta);
 	}
 	
 	/**
@@ -281,7 +298,7 @@ public abstract class ImageLab {
 	/**
 	 * Transformes the picture as a kind of "mosaic" by averaging pixel's areas
 	 * @param myImage the picture
-	 * @param pixelDiameter half of new pixels' width
+	 * @param pixelDiameter half of new pixels' width. If is <= 0, nothing will happen
 	 */
 	public static void pixelate(MyImage myImage, int pixelDiameter){
 		if(!Utils.isImageValid(myImage) || pixelDiameter <= 0)return;
@@ -313,7 +330,7 @@ public abstract class ImageLab {
 				}
 			}
 			catch(IOException i){
-				throw new IOException("Error: getImage(). The path or the type may bot be valid");
+				throw new IOException("Error: getImage(). The path or the type seems to be wrong");
 			}
 		}
 		return null;

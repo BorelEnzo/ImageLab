@@ -75,11 +75,11 @@ public abstract class GreyScaleConversion {
 	private static int getGrey(EnumGreyScale code, Colour colour){
 		switch(code){
 		case GREY_SCALE_BT709:
-			return Math.round(0.2126f * (colour.getR() & 0xFF) + 0.7152f * (colour.getG() & 0xFF) + 0.0722f * (colour.getB() & 0xFF));
+			return Math.round(0.2126f * (float)(colour.getR() & 0xFF) + 0.7152f * (float)(colour.getG() & 0xFF) + 0.0722f * (float)(colour.getB() & 0xFF));
 		case GREY_SCALE_BT601:
-			return Math.round(0.299f * (colour.getR() & 0xFF) + 0.587f * (colour.getG() & 0xFF) + 0.114f * (colour.getB() & 0xFF));
+			return Math.round(0.299f * (float)(colour.getR() & 0xFF) + 0.587f * (float)(colour.getG() & 0xFF) + 0.114f * (float)(colour.getB() & 0xFF));
 		case GREY_SCALE_AVG:
-			return (int) ((colour.getR() + colour.getG() + colour.getB()) / 3f);
+			return (int) ((float)(colour.getR() + colour.getG() + colour.getB()) / 3f);
 		case GREY_SCALE_DESATURATION:
 			return (int) ((float)(Math.max(colour.getR(), Math.max(colour.getG(), colour.getB())) + Math.min(colour.getR(), Math.min(colour.getG(), colour.getB()))) / 2f);
 		case GREY_SCALE_DECOMPOSITION_MIN:
@@ -92,6 +92,8 @@ public abstract class GreyScaleConversion {
 			return colour.getG();
 		case GREY_SCALE_BLUE_CHANNEL:
 			return colour.getB();
+		case GREY_SCALE_BLACK_AND_WHITE:
+			return (((float)(colour.getR() + colour.getG() + colour.getB())) / 3f) > 127 ? 255: 0; 
 		}
 		return 0;
 	}

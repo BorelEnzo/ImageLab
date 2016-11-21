@@ -66,14 +66,15 @@ public abstract class Effect extends AbstractLab{
 	public static void pixelate(MyImage myImage, int pixelDiameter){
 		float r, g, b;
 		int startX, endX, startY, endY;
-		float nbP = (float) Math.pow(pixelDiameter * 2 + 1, 2);
-		for(int i = pixelDiameter; i < myImage.getPixels().length + 1; i+=(pixelDiameter * 2 + 1)){
-			for(int j = pixelDiameter; j < myImage.getPixels()[i].length + 1; j+=(pixelDiameter * 2 + 1)){
+		float nbP;
+		for(int i = pixelDiameter; i < myImage.getPixels().length + pixelDiameter; i+=(pixelDiameter * 2 + 1)){
+			for(int j = pixelDiameter; j < myImage.getPixels()[0].length + pixelDiameter; j+=(pixelDiameter * 2 + 1)){
 				r = g = b = 0.0f;
-				startX = j - pixelDiameter < 0 ? 0 : j - pixelDiameter;
-				endX = j + pixelDiameter > myImage.getPixels()[i].length - 1 ? myImage.getPixels()[i].length -1 : j + pixelDiameter;
-				startY = i - pixelDiameter < 0 ? 0 : i - pixelDiameter;
+				startX = j - pixelDiameter;
+				endX = j + pixelDiameter > myImage.getPixels()[0].length - 1 ? myImage.getPixels()[0].length -1 : j + pixelDiameter;
+				startY = i - pixelDiameter;
 				endY = i + pixelDiameter > myImage.getPixels().length - 1 ? myImage.getPixels().length - 1 : i + pixelDiameter;
+				nbP = ((endX - startX) + 1) * ((endY - startY) + 1);
 				for(int p = startY; p <= endY; p++){
 					for(int q = startX;  q <= endX; q++){
 						Colour c = myImage.getPixels()[p][q];

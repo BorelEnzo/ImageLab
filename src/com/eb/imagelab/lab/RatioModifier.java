@@ -19,13 +19,26 @@ public abstract class RatioModifier {
 		myImage.update();
 	}
 	
-	public static void changeBrigthness(MyImage myImage, float delta){
+	public static void changeContrast(MyImage myImage, float delta){
 		if(delta < 0)delta = 0;
 		for(int i = 0; i < myImage.getPixels().length; i++){
 			for(int j = 0; j < myImage.getPixels()[i].length; j++){
 				myImage.getPixels()[i][j].setR((int) (((float)myImage.getPixels()[i][j].getR()) * delta));
 				myImage.getPixels()[i][j].setG((int) (((float)myImage.getPixels()[i][j].getG()) * delta));
 				myImage.getPixels()[i][j].setB((int) (((float)myImage.getPixels()[i][j].getB()) * delta));
+			}
+		}
+		myImage.update();
+	}
+	
+	public static void changeBrightness(MyImage myImage, int brightness){
+		if(brightness < -255)brightness = -255;
+		if(brightness > 255)brightness = 255;
+		for(int i = 0; i < myImage.getPixels().length; i++){
+			for(int j = 0; j < myImage.getPixels()[i].length; j++){
+				myImage.getPixels()[i][j].setR((int) (((float)myImage.getPixels()[i][j].getR()) + brightness));
+				myImage.getPixels()[i][j].setG((int) (((float)myImage.getPixels()[i][j].getG()) + brightness));
+				myImage.getPixels()[i][j].setB((int) (((float)myImage.getPixels()[i][j].getB()) + brightness));
 			}
 		}
 		myImage.update();
