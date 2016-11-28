@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 import com.eb.imagelab.lab.ImageLab;
-import com.eb.imagelab.model.EnumGreyScale;
 import com.eb.imagelab.model.MyImage;
 
 public class MainPanel extends JPanel{
